@@ -7,8 +7,7 @@ from pydantic_models import PersonResponse, PersonCreate
 app = FastAPI()
 
 # Database URL (Replace with your database URL)
-DATABASE_URL = "sqlite:///./test.db"
-
+DATABASE_URL = "postgresql://oiseh:5PNWs2xgyVCJza0P3lr1wsQkDN4xwWBN@dpg-cjvelut175es73fvt0v0-a.oregon-postgres.render.com/stage2db"
 # SQLAlchemy database connection
 engine = create_engine(DATABASE_URL)
 Base.metadata.create_all(bind=engine)
