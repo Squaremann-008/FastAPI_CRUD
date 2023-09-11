@@ -1,52 +1,59 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException
+from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from models import Person, SessionLocal, engine
+from models import Person, Base
+from pydantic_models import PersonResponse, PersonCreate
 
 app = FastAPI()
 
-# Dependency to get the database session
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+# Database URL (Replace with your database URL)
+DATABASE_URL = "sqlite:///./test.db"
 
-# Create a new person
-@app.post("/persons/", response_model=Person)
-def create_person(person: Person, db: Session = Depends(get_db)):
-    db_person = Person(name=person.name, age=person.age)
-    db.add(db_person)
-    db.commit()
-    db.refresh(db_person)
+# SQLAlchemy database connection
+engine = create_engine(DATABASE_URL)
+Base.metadata.create_all(bind=engine)
+session = Session(engine)
+
+@app.post("/api/", response_model=PersonResponse)
+def create_person(person: PersonCreate):
+    # Create a new person in the database
+    db_person = Person(**person.model_dump())
+    session.add(db_person)
+    session.commit()
+    session.refresh(db_person)
     return db_person
 
-# Read a person by name
-@app.get("/persons/{name}", response_model=Person)
-def read_person_by_name(name: str, db: Session = Depends(get_db)):
-    db_person = db.query(Person).filter(Person.name == name).first()
-    if db_person is None:
+@app.get("/api/{user_id}", response_model=PersonResponse)
+def read_person(user_id: str):
+    # Fetch the person from the database by name
+    person = session.query(Person).filter(Person.name == user_id).first()
+    if person is None:
         raise HTTPException(status_code=404, detail="Person not found")
-    return db_person
+    return person
 
-# Update a person by name
-@app.put("/persons/{name}", response_model=Person)
-def update_person_by_name(name: str, updated_info: Person, db: Session = Depends(get_db)):
-    db_person = db.query(Person).filter(Person.name == name).first()
-    if db_person is None:
+@app.put("/api/{user_id}", response_model=PersonResponse)
+def update_person(user_id: str, updated_person: PersonCreate):
+    # Fetch the person from the database by name
+    person = session.query(Person).filter(Person.name == user_id).first()
+    if person is None:
         raise HTTPException(status_code=404, detail="Person not found")
-    for attr, value in updated_info.dict().items():
-        setattr(db_person, attr, value)
-    db.commit()
-    db.refresh(db_person)
-    return db_person
 
-# Delete a person by name
-@app.delete("/persons/{name}")
-def delete_person_by_name(name: str, db: Session = Depends(get_db)):
-    db_person = db.query(Person).filter(Person.name == name).first()
-    if db_person is None:
+    # Update the person's details
+    for key, value in updated_person.model_dump().items():
+        setattr(person, key, value)
+
+    session.commit()
+    session.refresh(person)
+    return person
+
+@app.delete("/api/{user_id}", response_model=PersonResponse)
+def delete_person(user_id: str):
+    # Fetch the person from the database by name
+    person = session.query(Person).filter(Person.name == user_id).first()
+    if person is None:
         raise HTTPException(status_code=404, detail="Person not found")
-    db.delete(db_person)
-    db.commit()
-    return {"message": "Person deleted successfully"}
+
+    # Delete the person from the database
+    session.delete(person)
+    session.commit()
+    return person

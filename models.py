@@ -20,3 +20,4 @@ Base.metadata.create_all(bind=engine)
 
 # Create a session factory
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
