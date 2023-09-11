@@ -29,7 +29,7 @@ This documentation provides details on how to set up and use the FastAPI CRUD AP
 
 ### Read Person by Name
 
-- **Endpoint:** `/api/{user_id}`
+- **Endpoint:** `/api/{user_name}`
 - **HTTP Method:** GET
 - **Response:**
 
@@ -43,7 +43,7 @@ This documentation provides details on how to set up and use the FastAPI CRUD AP
 
 ### Update Person by Name
 
-- **Endpoint:** `/api/{user_id}`
+- **Endpoint:** `/api/{user_name}`
 - **HTTP Method:** PUT
 - **Request Body (JSON):**
 
@@ -66,7 +66,7 @@ This documentation provides details on how to set up and use the FastAPI CRUD AP
 
 ### Delete Person by Name
 
-- **Endpoint:** `/api/{user_id}`
+- **Endpoint:** `/api/{user_name}`
 - **HTTP Method:** DELETE
 - **Response:**
 

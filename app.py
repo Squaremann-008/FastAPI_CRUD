@@ -7,7 +7,7 @@ from pydantic_models import PersonResponse, PersonCreate
 app = FastAPI()
 
 # Database URL (Replace with your database URL)
-DATABASE_URL = "postgresql://oiseh:5PNWs2xgyVCJza0P3lr1wsQkDN4xwWBN@dpg-cjvelut175es73fvt0v0-a.oregon-postgres.render.com/stage2db"
+DATABASE_URL = "sqlite:///./test.db"
 # SQLAlchemy database connection
 engine = create_engine(DATABASE_URL)
 Base.metadata.create_all(bind=engine)
@@ -22,18 +22,18 @@ def create_person(person: PersonCreate):
     session.refresh(db_person)
     return db_person
 
-@app.get("/api/{user_id}", response_model=PersonResponse)
-def read_person(user_id: str):
+@app.get("/api/{user_name}", response_model=PersonResponse)
+def read_person(user_name: str):
     # Fetch the person from the database by name
-    person = session.query(Person).filter(Person.name == user_id).first()
+    person = session.query(Person).filter(Person.name == user_name).first()
     if person is None:
         raise HTTPException(status_code=404, detail="Person not found")
     return person
 
-@app.put("/api/{user_id}", response_model=PersonResponse)
-def update_person(user_id: str, updated_person: PersonCreate):
+@app.put("/api/{user_name}", response_model=PersonResponse)
+def update_person(user_name: str, updated_person: PersonCreate):
     # Fetch the person from the database by name
-    person = session.query(Person).filter(Person.name == user_id).first()
+    person = session.query(Person).filter(Person.name == user_name).first()
     if person is None:
         raise HTTPException(status_code=404, detail="Person not found")
 
@@ -45,10 +45,10 @@ def update_person(user_id: str, updated_person: PersonCreate):
     session.refresh(person)
     return person
 
-@app.delete("/api/{user_id}", response_model=PersonResponse)
-def delete_person(user_id: str):
+@app.delete("/api/{user_name}", response_model=PersonResponse)
+def delete_person(user_name: str):
     # Fetch the person from the database by name
-    person = session.query(Person).filter(Person.name == user_id).first()
+    person = session.query(Person).filter(Person.name == user_name).first()
     if person is None:
         raise HTTPException(status_code=404, detail="Person not found")
 

@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-DATABASE_URL = "postgresql://oiseh:5PNWs2xgyVCJza0P3lr1wsQkDN4xwWBN@dpg-cjvelut175es73fvt0v0-a.oregon-postgres.render.com/stage2db"  # PostgreSQL database file
+DATABASE_URL = "sqlite:///./test.db"
 
 Base = declarative_base()
 

@@ -37,7 +37,7 @@ def test_update_person():
     data = {"name": "John Doe", "age": 39}
     response = make_request("PUT", "/api/John Doe", data)
     assert response.status_code == 200
-    assert response.json()["age"] == 35
+    assert response.json()["age"] == 39
     print("Update Person Test Passed")
 
 # Test Delete (DELETE)
