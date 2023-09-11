@@ -125,7 +125,7 @@ Follow these steps to set up and deploy the FastAPI application on a server:
 
 7. **API Documentation:**
 
-    For detailed API documentation and usage, refer to the API documentation provided above.
+    For detailed API documentation and usage, refer to the API documentation provided above as well as`http://your-server-ip:8000/docs`.
 
 ## Known Limitations
 
